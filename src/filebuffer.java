@@ -6,15 +6,42 @@ import java.util.Scanner;
 
 public class filebuffer {
 
-    public ArrayList<String> buffer;
-    public String fileName;
-    public boolean hasName;
+    private ArrayList<String> buffer;
+    private String fileName;
+    private boolean hasName;
+    private int currentLine = 0;
 
     public filebuffer(String fn, boolean hn) {
         buffer = new ArrayList<String>(); // Arraylist that stores every line of a file in strings
         hasName = hn;
-        if (hasName)
-            fileName = fn;
+        fileName = fn;
+        readFile();
+    }
+
+    /* getFileSize: gets the size of the buffer arraylist */
+    public int getFileSize() {
+        return buffer.size();
+    }
+
+    /* getCurrentLine: returns the current line value */
+    public int getCurrentLine() {
+        return currentLine;
+    }
+
+    /* changeCurrentLine: changes the current line value */
+    public void changeCurrentLine(int n) {
+        currentLine = n;
+    }
+
+    /* getLine: returns the selected line as a string */
+    public String getLine(int n) {
+        return buffer.get(n);
+    }
+
+    /* changeName: changes/adds the file name */
+    public void changeName(String name) {
+        fileName = name;
+        hasName = true;
     }
 
     /* printFile: prints strings from file arraylist, if num is true it includes line numbers */
@@ -72,5 +99,70 @@ public class filebuffer {
             createFile();
         }
         return 0;
+    }
+
+    /* range: gets the inputed range and runs the command with the range */
+    public void range(String range, String cmd) {
+        String num[] = new String[2];
+        num = range.replace("<", "").split(",");
+        String temp[] = new String[3];
+        temp = cmd.split("/");
+        int start = Integer.parseInt(num[0]) - 1, stop = Integer.parseInt(num[1]);
+        if (start <= 0 || start-1 > buffer.size() || stop <= 0 || stop-1 > buffer.size() || stop <= start)
+            System.out.println("?");
+        if (temp[0].equals("s"))
+            replace(start, stop, temp[1], temp[2]);
+        else if (temp[0].equals("d"))
+            deleteLine(start, stop);
+    }
+
+    /* deleteLine: deletes line in the range of start to stop */
+    public void deleteLine(int start, int stop) {
+        for (int i = start; i < stop;  i++) {
+            jed.file.buffer.remove(start);
+        }
+    }
+
+    /* replace: replaces an expression with new user input */
+    public void replace(int start, int stop, String ex, String newEx) {
+        for (int i = start; i < stop; i++) {
+            String line = buffer.get(i);
+            buffer.add(i, line.replace(ex, newEx));
+            buffer.remove(i + 1);
+        }
+    }
+
+    /* find: finds user input in the file and prints it with line numbers */
+    public void find(String expression) {
+        for (int i = 0; i < buffer.size(); i++) {
+            String line = buffer.get(i);
+            for (int j = 0, k = expression.length(); k < line.length(); j++, k++) {
+                if (line.substring(j, k).equals(expression)) {
+                    System.out.printf("%d %s\n", i + 1, line);
+                    break;
+                }
+            }
+        }
+    }
+
+    /* changeLine: changes the current line */
+    public void changeLine(Scanner kbIn) {
+        buffer.remove(currentLine);
+        String input;
+        int line = currentLine;
+        while (!(input = kbIn.nextLine()).equals("."))
+            buffer.add(line++, input);
+    }
+
+    /* deleteLine: deletes the current line */
+    public void deleteLine() {
+        buffer.remove(currentLine);
+    }
+
+    /* append: appends user input to the end of a file */
+    public void append(Scanner kbIn) {
+        String input;
+        while (!(input = kbIn.nextLine()).equals("."))
+            buffer.add(input);
     }
 }

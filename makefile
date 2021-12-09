@@ -1,7 +1,7 @@
-all: jed.java
-	javac jed.java
-	jar cvmf MANIFEST.MF jed.jar jed.class
+all:
+	javac -d . src/jed.java src/cmd.java src/filebuffer.java
+	jar cvmf src/MANIFEST.MF build/jed.jar jed/jed.class jed/cmd.class jed/filebuffer.class
 run: all
-	./jed
+	. build/jed
 clean:
-	rm jed.jar jed.class
+	rm -r build/jed.jar jed

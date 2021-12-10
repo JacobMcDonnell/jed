@@ -14,8 +14,10 @@ public class filebuffer {
     public filebuffer(String fn, boolean hn) {
         buffer = new ArrayList<String>(); // Arraylist that stores every line of a file in strings
         hasName = hn;
-        fileName = fn;
-        readFile();
+        if (hn) {
+            fileName = fn;
+            readFile();
+        }
     }
 
     /* getFileSize: gets the size of the buffer arraylist */

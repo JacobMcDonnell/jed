@@ -121,7 +121,7 @@ public class filebuffer {
     /* deleteLine: deletes line in the range of start to stop */
     public void deleteLine(int start, int stop) {
         for (int i = start; i < stop;  i++) {
-            jed.file.buffer.remove(start);
+            buffer.remove(start);
         }
     }
 
@@ -161,10 +161,14 @@ public class filebuffer {
         buffer.remove(currentLine);
     }
 
-    /* append: appends user input to the end of a file */
-    public void append(Scanner kbIn) {
+    /* append: appends user input to the end of a file or after the current line */
+    public void append(Scanner kbIn, boolean after) {
         String input;
+        int line = currentLine + 1;
         while (!(input = kbIn.nextLine()).equals("."))
-            buffer.add(input);
+            if (after)
+                buffer.add(line++, input);
+            else
+                buffer.add(input);
     }
 }

@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class jed {
 
     private static Scanner kbIn = new Scanner(System.in);
-    public static filebuffer file;
+    private static filebuffer file;
 
     public static void main(String args[]) {
         String fileName = null;
@@ -31,8 +31,8 @@ public class jed {
     private static int parser(String cmd) {
         int err = 0;
         if (isNum(cmd)) {
-            jed.file.changeCurrentLine(Integer.parseInt(cmd) - 1);
-            System.out.printf("%d %s\n", jed.file.getCurrentLine() + 1, jed.file.getLine(jed.file.getCurrentLine()));
+            file.changeCurrentLine(Integer.parseInt(cmd) - 1);
+            System.out.printf("%d %s\n", file.getCurrentLine() + 1, file.getLine(file.getCurrentLine()));
         } else {
             char c = cmd.charAt(0);
             switch (c) {
@@ -40,48 +40,54 @@ public class jed {
                     if (cmd.length() > 1) {
                         String s[] = new String[2];
                         s = cmd.split(" ");
-                        jed.file.changeName(s[1]);
+                        file.changeName(s[1]);
                     }
-                    err = jed.file.writeFile();
+                    err = file.writeFile();
                     break;
                 case 'q': // q quits
                     return 1;
                 case 'a': // a appends
-                    jed.file.append(kbIn);
+                    file.append(kbIn, false);
+                    break;
+                case 'A': // A appends after the current line
+                    file.append(kbIn, true);
                     break;
                 case 'p': // p prints lines
-                    jed.file.printFile(false);
+                    file.printFile(false);
                     break;
                 case 'n': //n prints lines with numbers
-                    jed.file.printFile(true);
+                    file.printFile(true);
                     break;
                 case 'c': // c change current line
-                    jed.file.changeLine(kbIn);
+                    file.changeLine(kbIn);
                     break;
                 case 'd':
-                    jed.file.deleteLine(); // d delete current line
+                    file.deleteLine(); // d delete current line
                     break;
                 case 'g': // g/expression/ finds user input
-                    jed.file.find(cmd.substring(2, cmd.length() - 1));
+                    file.find(cmd.substring(2, cmd.length() - 1));
                     break;
                 case '%': // %s/expression/newExpression/ replaces an expression with new user input through the whole file
                     String s[] = new String[3];
                     s = cmd.split("/");
-                    jed.file.replace(0, jed.file.getFileSize(), s[1], s[2]);
+                    file.replace(0, file.getFileSize(), s[1], s[2]);
                     break;
-                case '<': // <integer, integer>command works with d and s/ex/nex/
+                case '<': // <integer, integer> prefix works with d and s/ex/nex/
                     String t[] = new String[2];
                     t = cmd.split(">");
-                    jed.file.range(t[0], t[1]);
+                    file.range(t[0], t[1]);
                     break;
                 case 's': // s/expression/newExpression/ replaces an expression with new user input in the current line
                     String m[] = new String[3];
                     m = cmd.split("/");
-                    jed.file.replace(jed.file.getCurrentLine(), jed.file.getCurrentLine() + 1, m[1], m[2]);
+                    file.replace(file.getCurrentLine(), file.getCurrentLine() + 1, m[1], m[2]);
                     break;
                 case 'o':  // o fileName opens a file
-                    jed.file.changeName(cmd.substring(2,cmd.length()));
-                    jed.file.readFile();
+                    file.changeName(cmd.substring(2,cmd.length()));
+                    file.readFile();
+                    break;
+                case 'h': // help command
+                    help();
                     break;
                 default:
                     System.out.println("?");
@@ -91,6 +97,10 @@ public class jed {
         if (err == 1) // error in writing the file
             System.out.println("Error writing the file");
         return 0;
+    }
+
+    private static void help() {
+        System.out.println("Jed commands:\nq: quits.\nw: writes the file.\nw: filename: writes with inputted name.\no: filename: opens the file.\na: appends user input to the end of the file.\nA: appends user input after the current line.\np: prints the file.\nn: prints the file with line numbers.\nc: deletes and changes the current line.\nd: deletes the current line.\nAny integer: changes to that line number.\ng/expression/: finds and prints the expression.\n%s/expression/newExpression/: replaces an expression with new user input through the whole file.\n<integer, integer>: prefix works with d and s/ex/nex/ for a range of line.\ns/expression/newExpression/: replaces an expression with new user input in the current line.\nh: prints the commands and their description.");
     }
 
     /* isNum: checks if a string is a number, only to be used for changing lines */

@@ -19,7 +19,6 @@ public class filebuffer {
             readFile();
         }
     }
-
     /* getFileSize: gets the size of the buffer arraylist */
     public int getFileSize() {
         return buffer.size();
@@ -33,6 +32,12 @@ public class filebuffer {
     /* changeCurrentLine: changes the current line value */
     public void changeCurrentLine(int n) {
         currentLine = n;
+        printLine(currentLine);
+    }
+
+    /* printLine: prints the line */
+    private void printLine(int n) {
+        System.out.printf("%d %s\n", n + 1, getLine(n));
     }
 
     /* getLine: returns the selected line as a string */

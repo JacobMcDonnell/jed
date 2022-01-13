@@ -18,7 +18,9 @@ public class jed {
 
         file = new filebuffer(fileName, hasName);
 
+        /* Main command prompt */
         while (true) {
+            System.out.print("> ");
             String line = kbIn.nextLine();
             int err = parser(line);
             if (err == 1)
@@ -32,7 +34,6 @@ public class jed {
         int err = 0;
         if (isNum(cmd)) {
             file.changeCurrentLine(Integer.parseInt(cmd) - 1);
-            System.out.printf("%d %s\n", file.getCurrentLine() + 1, file.getLine(file.getCurrentLine()));
         } else {
             char c = cmd.charAt(0);
             switch (c) {
@@ -88,6 +89,21 @@ public class jed {
                     break;
                 case 'h': // help command
                     help();
+                    break;
+                case '^': case '-': // previous line command
+                    if ((file.getCurrentLine() - 1) > -1)
+                        file.changeCurrentLine((file.getCurrentLine() - 1));
+                    else
+                        System.out.println("?");
+                    break;
+                case '+': // Next line command
+                    if ((file.getCurrentLine() + 1) <= file.getFileSize())
+                        file.changeCurrentLine((file.getCurrentLine() + 1));
+                    else
+                        System.out.println("?");
+                    break;
+                case '$': // Last line command
+                    file.changeCurrentLine(file.getFileSize() - 1);
                     break;
                 default:
                     System.out.println("?");

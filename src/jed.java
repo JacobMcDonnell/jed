@@ -105,6 +105,15 @@ public class jed {
                 case '$': // Last line command
                     file.changeCurrentLine(file.getFileSize() - 1);
                     break;
+                case '.': // Prints current line
+                    System.out.println(file.getLine(file.getCurrentLine()));
+                    break;
+                case 'U': // Uppercase entire line
+                    file.upperCase();
+                    break;
+                case 'l': // Lowercase entire line
+                    file.lowerCase();
+                    break;
                 default:
                     System.out.println("?");
                     break;
@@ -116,7 +125,7 @@ public class jed {
     }
 
     private static void help() {
-        System.out.println("Jed commands:\nq: quits.\nw: writes the file.\nw: filename: writes with inputted name.\no: filename: opens the file.\na: appends user input to the end of the file.\nA: appends user input after the current line.\np: prints the file.\nn: prints the file with line numbers.\nc: deletes and changes the current line.\nd: deletes the current line.\nAny integer: changes to that line number.\ng/expression/: finds and prints the expression.\n%s/expression/newExpression/: replaces an expression with new user input through the whole file.\n<integer, integer>: prefix works with d and s/ex/nex/ for a range of line.\ns/expression/newExpression/: replaces an expression with new user input in the current line.\nh: prints the commands and their description.");
+        System.out.println("Jed commands:\nq: quits.\nw: writes the file.\nw: filename: writes with inputted name.\no: filename: opens the file.\na: appends user input to the end of the file.\nA: appends user input after the current line.\np: prints the file.\nn: prints the file with line numbers.\nc: deletes and changes the current line.\nd: deletes the current line.\nl: makes line lower case.\nU: makes line upper case.\n-: goes to previous line.\n+: goes to next line.\n$: goes to last line.\n.: prints current line.\nAny integer: changes to that line number.\ng/expression/: finds and prints the expression.\n%s/expression/newExpression/: replaces an expression with new user input through the whole file.\n<integer, integer>: prefix works with d, l, U, and s/ex/nex/ for a range of line.\ns/expression/newExpression/: replaces an expression with new user input in the current line.\nh: prints the commands and their description.");
     }
 
     /* isNum: checks if a string is a number, only to be used for changing lines */

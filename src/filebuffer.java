@@ -19,6 +19,39 @@ public class filebuffer {
             readFile();
         }
     }
+
+    /* upperCase: makes the current line upper case */
+    public void upperCase() {
+        String temp = buffer.get(currentLine).toUpperCase();
+        buffer.add(currentLine, temp);
+        buffer.remove(currentLine + 1);
+    }
+
+    /* lowerCase: makes the current line lower case */
+    public void lowerCase() {
+        String temp = buffer.get(currentLine).toLowerCase();
+        buffer.add(currentLine, temp);
+        buffer.remove(currentLine + 1);
+    }
+
+    /* upperCase: makes the lines in the range upper case */
+    public void upperCase(int start, int stop) {
+        for (int i = start; i < stop; i++) {
+            String temp = buffer.get(i).toUpperCase();
+            buffer.add(i, temp);
+            buffer.remove(i + 1);
+        }
+    }
+
+    /* lowerCase: makes the lines in the range lower case */
+    public void lowerCase(int start, int stop) {
+        for (int i = start; i < stop; i++) {
+            String temp = buffer.get(i).toLowerCase();
+            buffer.add(i, temp);
+            buffer.remove(i + 1);
+        }
+    }
+
     /* getFileSize: gets the size of the buffer arraylist */
     public int getFileSize() {
         return buffer.size();
@@ -121,6 +154,10 @@ public class filebuffer {
             replace(start, stop, temp[1], temp[2]);
         else if (temp[0].equals("d"))
             deleteLine(start, stop);
+        else if (temp[0].equals("l"))
+            lowerCase(start, stop);
+        else if (temp[0].equals("U"))
+            upperCase(start, stop);
     }
 
     /* deleteLine: deletes line in the range of start to stop */
